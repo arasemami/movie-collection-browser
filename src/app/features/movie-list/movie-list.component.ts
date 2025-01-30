@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
-import { MovieCardComponent } from '../../components/movie-card/movie-card.component';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MovieService } from '../../services/movie.service';
-import { CommonModule } from '@angular/common';
+import { WatchlistService } from '../../services/watchlist.service';
+import { Subscription } from 'rxjs';
+import { MovieCardComponent } from '../../components/movie-card/movie-card.component';
 import { LoadingSpinnerComponent } from '../../components/loading-spinner/loading-spinner.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-movie-list',
@@ -12,19 +14,34 @@ import { LoadingSpinnerComponent } from '../../components/loading-spinner/loadin
     LoadingSpinnerComponent
   ],
   templateUrl: './movie-list.component.html',
-  styleUrl: './movie-list.component.scss'
+  styleUrls: ['./movie-list.component.scss']
 })
-export class MovieListComponent {
+export class MovieListComponent implements OnInit, OnDestroy {
   movies: any[] = [];
+  watchlist: any[] = [];
   isLoading: boolean = true;
-  
-  constructor(private movieService: MovieService) {}
+  private watchlistSubscription: Subscription | null = null;
 
+  constructor(
+    private movieService: MovieService,
+    private watchlistService: WatchlistService
+  ) { }
 
   ngOnInit() {
-    this.movieService.getMovies().subscribe((data) => {
+     this.watchlistSubscription = this.watchlistService.watchlist$.subscribe((watchlist) => {
+      this.watchlist = watchlist; 
+    });
+
+     this.movieService.getMovies().subscribe((data) => {
       this.movies = data.results;
-      this.isLoading = false; 
+      this.isLoading = false;
     });
   }
-}
+
+  ngOnDestroy(): void {
+     if (this.watchlistSubscription) {
+      this.watchlistSubscription.unsubscribe();
+    }
+  }
+
+ }

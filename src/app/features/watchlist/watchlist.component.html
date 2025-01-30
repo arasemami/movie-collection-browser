@@ -1,0 +1,30 @@
+<div class="container mx-auto p-4">
+    <h2 class="text-3xl font-semibold text-center text-yellow-400 mb-6">My Watchlist</h2>
+
+    <div *ngIf="watchlistMovies.length > 0; else noMovies"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div *ngFor="let movie of watchlistMovies">
+            <div
+                class="relative group cursor-pointer overflow-hidden rounded-xl shadow-md transform transition duration-300 hover:scale-105 hover:shadow-xl bg-gray-900 text-white">
+                <img class="w-full h-64 object-cover rounded-t-xl transition duration-300 group-hover:opacity-75"
+                    [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" alt="{{ movie.title }}" />
+
+                <div class="p-4 flex flex-col items-center text-center">
+                    <h3 class="text-lg font-semibold truncate group-hover:text-yellow-400 transition duration-300">
+                        {{ movie.title }}
+                    </h3>
+                    <p class="text-gray-400 text-sm">
+                        ({{ movie.release_date | date:'yyyy' }})
+                    </p>
+                    <button (click)="removeFromWatchlist(movie.id)" class="mt-4 text-red-500 hover:text-red-300">
+                        Remove from Watchlist
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #noMovies>
+        <div class="text-center text-gray-500">Your watchlist is empty. Add some movies!</div>
+    </ng-template>
+</div>

@@ -1,8 +1,7 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-
 <div class="container p-2 m-auto">
-    <h1 class="text-4xl font-bold pb-4">Movie Watch List</h1>
+    <h1 class="text-4xl font-bold pb-4">Movie List</h1>
     <div class="grid grid-cols-4 gap-4">
         <app-movie-card *ngFor="let movie of movies" [movie]="movie"></app-movie-card>
     </div>
