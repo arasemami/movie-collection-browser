@@ -1,0 +1,25 @@
+<div
+  class="relative group cursor-pointer overflow-hidden rounded-xl shadow-md transform transition duration-300 hover:scale-105 hover:shadow-xl bg-gray-900 text-white w-full sm:w-[280px] md:w-[300px] lg:w-[320px] xl:w-[340px]">
+  
+   <img 
+    class="w-full h-64 object-cover rounded-t-xl transition duration-300 group-hover:opacity-75"
+    [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" 
+    alt="{{ movie.title }}" />
+
+   <div class="p-4 flex flex-col items-center text-center">
+    <h3 class="text-lg font-semibold truncate group-hover:text-yellow-400 transition duration-300 w-full">
+      {{ movie.title }}
+    </h3>
+    <p class="text-gray-400 text-sm">
+      ({{ movie.release_date | date:'yyyy' }})
+    </p>
+  </div>
+
+   <div
+    class="absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4 text-center">
+    <h3 class="text-lg font-bold text-yellow-400">
+      {{ movie.title }}
+    </h3>
+    <p class="text-gray-300 text-sm hidden sm:block">{{ movie.overview | slice:0:100 }}...</p>
+  </div>
+</div>
