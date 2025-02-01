@@ -15,10 +15,6 @@ export class WatchlistService {
     }
   }
 
-  getWatchlist() {
-    return this.watchlistSubject.asObservable();
-  }
-
   addToWatchlist(movie: any) {
     const currentList = this.watchlistSubject.getValue();
     if (!currentList.find(m => m.id === movie.id)) {
