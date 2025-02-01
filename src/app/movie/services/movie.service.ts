@@ -15,7 +15,7 @@ export class MovieService {
     return this.http.get(`${this.apiUrl}/movie/popular?api_key=${this.apiKey}`);
   }
 
-  getMovieDetails(movieId: string): Observable<any> {
+  getMovieDetails(movieId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/movie/${movieId}?api_key=${this.apiKey}&append_to_response=credits`);
   }
 }
