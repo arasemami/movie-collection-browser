@@ -23,13 +23,11 @@ export class WatchlistButtonComponent {
   }
 
   addToWatchlist() {
-    debugger
     if (this.addedToWatchlist) {
       this.watchlistService.removeFromWatchlist(this.movie.id);
     } else {
       this.watchlistService.addToWatchlist(this.movie);
     }
-    this.addedToWatchlist = !this.addedToWatchlist;
   }
 
 }

@@ -16,7 +16,6 @@ import { WatchlistButtonComponent } from '../watchlist-button/watchlist-button.c
 })
 export class MovieCardComponent {
   @Input() movie: any;
-  @Input() watchlist: any[] = [];
 
   constructor() { }
 
