@@ -21,8 +21,8 @@ export class MovieDetailComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private movieService: MovieService  
-  ) {}
+    private movieService: MovieService
+  ) { }
 
   ngOnInit(): void {
     this.movieId = this.route.snapshot.paramMap.get('id');
@@ -30,16 +30,17 @@ export class MovieDetailComponent {
       this.fetchMovieDetails(this.movieId);
     }
   }
-  
+
   fetchMovieDetails(movieId: string) {
     this.movieService.getMovieDetails(movieId).subscribe(
       (data) => {
         this.movie = data;
-        this.isLoading = false; 
+        console.log(this.movie)
+        this.isLoading = false;
       },
       (error) => {
         console.error('Error fetching movie details:', error);
-        this.isLoading = false; 
+        this.isLoading = false;
       }
     );
   }
