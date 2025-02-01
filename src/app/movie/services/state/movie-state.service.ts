@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Movie } from '../../../shared/interfaces/movie.interface';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 
 export class MovieStateService {
   private _movies$ = new BehaviorSubject<Movie[]>([]);

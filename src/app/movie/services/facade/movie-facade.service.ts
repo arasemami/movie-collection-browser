@@ -7,7 +7,10 @@ import { WATCH_LIST_KEY } from '../../../shared/constant/local-storage-key.const
 import { MovieStateService } from '../state/movie-state.service';
 import { MovieService } from '../movie.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
+
 export class MovieFacadeService {
   private _movieStateService = inject(MovieStateService);
   private _movieService = inject(MovieService);
