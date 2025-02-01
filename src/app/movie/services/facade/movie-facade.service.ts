@@ -1,17 +1,18 @@
 import { inject, Injectable } from '@angular/core';
 import { Movie } from '../../../shared/interfaces/movie.interface';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { LocalStorageService } from '../../../shared/services/local-storage.service';
 import { WATCH_LIST_KEY } from '../../../shared/constant/local-storage-key.const';
 import { MovieStateService } from '../state/movie-state.service';
 import { MovieService } from '../movie.service';
 
 @Injectable()
-
 export class MovieFacadeService {
-  private _movieStateService = inject(MovieStateService)
-  private _movieService = inject(MovieService)
-  private _localStorageService = inject(LocalStorageService)
+  private _movieStateService = inject(MovieStateService);
+  private _movieService = inject(MovieService);
+  private _localStorageService = inject(LocalStorageService);
+  private errorSubject = new BehaviorSubject<any>(null);
 
   public getMovie$(): Observable<Movie[]> {
     return this._movieStateService.getMovies$();
@@ -23,19 +24,25 @@ export class MovieFacadeService {
 
   public callMovies() {
     this.setLoading(true);
-    this._movieService.getMovies().subscribe((res: any) => {
-      if (res.results)
+    this._movieService.getMovies().pipe(
+      catchError(error => {
+        this.errorSubject.next(error);
+        this.setLoading(false);
+        throw error;
+      })
+    ).subscribe((res: any) => {
+      if (res.results) {
         this.setMovies(this.setWatchListMovie(res.results));
+      }
       this.setLoading(false);
-    })
+    });
   }
-
 
   private setWatchListMovie(movies: Movie[]): Movie[] {
     const watchlist = this._localStorageService.getItem(WATCH_LIST_KEY);
     movies.forEach(movie => {
       movie.isWatchList = !!watchlist.find((w: { id: number }) => w.id === movie.id);
-    })
+    });
     return movies;
   }
 
@@ -47,7 +54,6 @@ export class MovieFacadeService {
     return this._movieStateService.getLoading$();
   }
 
-
   public getSelectedMovie$(): Observable<Movie> {
     return this._movieStateService.getSelectedMovie$();
   }
@@ -58,7 +64,13 @@ export class MovieFacadeService {
 
   public callMovieDetail(id: number) {
     this.setLoading(true);
-    this._movieService.getMovieDetails(id).subscribe((res: any) => {
+    this._movieService.getMovieDetails(id).pipe(
+      catchError(error => {
+        this.errorSubject.next(error);
+        this.setLoading(false);
+        throw error;
+      })
+    ).subscribe((res: any) => {
       if (res) {
         const movie = res;
         const watchlist = this._localStorageService.getItem(WATCH_LIST_KEY);
@@ -66,7 +78,10 @@ export class MovieFacadeService {
         this.setSelectedMovie(movie);
       }
       this.setLoading(false);
-    })
+    });
   }
 
+  public getError$(): Observable<any> {
+    return this.errorSubject.asObservable();
+  }
 }
