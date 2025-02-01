@@ -4,7 +4,7 @@ export interface Movie {
   releaseYear: number;
   genre: string;
   posterPath: string;
-  isWatckList: Boolean;
+  isWatchList: Boolean;
   backdrop_path: string;
   poster_path: string;
   release_date: string;

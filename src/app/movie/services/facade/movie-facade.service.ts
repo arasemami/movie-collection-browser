@@ -25,16 +25,16 @@ export class MovieFacadeService {
     this.setLoading(true);
     this._movieService.getMovies().subscribe((res: any) => {
       if (res.results)
-        this.setMovies(this.setWtachListMovie(res.results));
+        this.setMovies(this.setWatchListMovie(res.results));
       this.setLoading(false);
     })
   }
 
 
-  private setWtachListMovie(movies: Movie[]): Movie[] {
-    const watchlists = this._localStorageService.getItem(WATCH_LIST_KEY);
+  private setWatchListMovie(movies: Movie[]): Movie[] {
+    const watchlist = this._localStorageService.getItem(WATCH_LIST_KEY);
     movies.forEach(movie => {
-      movie.isWatckList = !!watchlists.find((w: { id: number }) => w.id === movie.id);
+      movie.isWatchList = !!watchlist.find((w: { id: number }) => w.id === movie.id);
     })
     return movies;
   }
@@ -61,8 +61,8 @@ export class MovieFacadeService {
     this._movieService.getMovieDetails(id).subscribe((res: any) => {
       if (res) {
         const movie = res;
-        const watchlists = this._localStorageService.getItem(WATCH_LIST_KEY);
-        movie.isWatckList = !!watchlists.find((w: { id: number }) => w.id === movie.id);
+        const watchlist = this._localStorageService.getItem(WATCH_LIST_KEY);
+        movie.isWatchList = !!watchlist.find((w: { id: number }) => w.id === movie.id);
         this.setSelectedMovie(movie);
       }
       this.setLoading(false);

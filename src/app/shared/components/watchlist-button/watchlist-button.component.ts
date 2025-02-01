@@ -16,9 +16,9 @@ export class WatchlistButtonComponent {
   private watchlistService = inject(WatchlistService);
 
   addToWatchlist() {
-    this.movie.isWatckList ?
+    this.movie.isWatchList ?
       this.watchlistService.removeFromWatchlist(this.movie.id) :
       this.watchlistService.addToWatchlist(this.movie);
-    this.movie.isWatckList = !this.movie.isWatckList;
+    this.movie.isWatchList = !this.movie.isWatchList;
   }
 }
