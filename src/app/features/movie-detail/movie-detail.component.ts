@@ -3,12 +3,14 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MovieService } from '../../services/movie.service';
 import { LoadingSpinnerComponent } from '../../components/loading-spinner/loading-spinner.component';
+import { WatchlistButtonComponent } from '../../components/watchlist-button/watchlist-button.component';
 
 @Component({
   selector: 'app-movie-detail',
   imports: [
     CommonModule,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    WatchlistButtonComponent
 
   ],
   templateUrl: './movie-detail.component.html',

@@ -7,7 +7,7 @@
         <div class="absolute inset-0 bg-black bg-opacity-70"></div>
     </div>
 
-    <div class="relative z-10 px-4 sm:px-8 lg:px-16 py-10 backdrop-blur-lg bg-black bg-opacity-25 h-screen">
+    <div class="relative z-10 px-4 sm:px-8 lg:px-16 py-10 backdrop-blur-lg bg-black bg-opacity-25 min-h-screen">
         <div class="flex flex-col lg:flex-row items-center gap-8 max-w-6xl mx-auto">
 
             <div class="w-60 sm:w-72 lg:w-80">
@@ -20,6 +20,10 @@
                 <p class="text-lg text-gray-300">{{ movie.release_date | date: 'yyyy' }}</p>
 
                 <p class="mt-6 text-gray-100 text-lg leading-relaxed">{{ movie.overview }}</p>
+
+                <div class="mt-6 flex items-center justify-center lg:justify-start">
+                    <app-watchlist-button [movie]="movie"></app-watchlist-button>
+                </div>
 
                 <div class="mt-6 flex items-center justify-center lg:justify-start gap-2">
                     <h3 class="text-2xl font-semibold">Rating:</h3>
