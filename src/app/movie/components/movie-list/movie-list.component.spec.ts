@@ -1,24 +1,25 @@
-import { Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MovieListComponent } from './movie-list.component';
 import { MovieFacadeService } from '../../services/facade/movie-facade.service';
-import { of } from 'rxjs';
+import { MovieStateService } from '../../services/state/movie-state.service';
+import { of, Subject } from 'rxjs';
 import { Movie } from '../../../shared/interfaces/movie.interface';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MovieCardComponent } from '../../../shared/components/movie-card/movie-card.component';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MovieService } from '../../services/movie.service';
-
- 
+import { LocalStorageService } from '../../../shared/services/local-storage.service';
 
 fdescribe('MovieListComponent', () => {
   let component: MovieListComponent;
   let fixture: ComponentFixture<MovieListComponent>;
-  let movieFacadeServiceMock: jasmine.SpyObj<MovieFacadeService>;
+  let movieFacadeService: jasmine.SpyObj<MovieFacadeService>;
+  let movieStateService: jasmine.SpyObj<MovieStateService>;
   let movieService: jasmine.SpyObj<MovieService>;
+  let localStorageService: jasmine.SpyObj<LocalStorageService>;
 
   const mockMovies: Movie[] = [
     {
@@ -60,96 +61,98 @@ fdescribe('MovieListComponent', () => {
   ];
 
   beforeEach(async () => {
-    movieService = jasmine.createSpyObj('MovieService', ['getMovies']);
-    movieService.getMovies.and.returnValue(of(mockMovies));
-    movieFacadeServiceMock = jasmine.createSpyObj<MovieFacadeService>('MovieFacadeService', [
-      'callMovies',
-      'getMovie$',
-      'getLoading$'
-    ]);
-
-    movieFacadeServiceMock.getMovie$.and.returnValue(of(mockMovies));
-    movieFacadeServiceMock.getLoading$.and.returnValue(of(false));
-    movieFacadeServiceMock.callMovies.and.stub();
+    const movieFacadeSpy = jasmine.createSpyObj('MovieFacadeService', ['callMovies', 'getMovie$', 'getLoading$']);
+    const movieStateSpy = jasmine.createSpyObj('MovieStateService', [], {
+      movies$: of(mockMovies),
+      loading$: of(false),
+    });
+    const movieSpy = jasmine.createSpyObj('movieService', ['getMovies']);
+    const localStorageSpy = jasmine.createSpyObj('LocalStorageService', ['getItem']);
 
     await TestBed.configureTestingModule({
-      imports: [
-        MovieListComponent, // Import standalone component
-        ReactiveFormsModule,
-        MovieCardComponent, // Import standalone dependencies
-        LoadingSpinnerComponent,
-        HttpClientTestingModule
-      ],
+      imports: [MovieListComponent, MovieCardComponent, LoadingSpinnerComponent, CommonModule, ReactiveFormsModule, HttpClientTestingModule],
       providers: [
-        { provide: MovieFacadeService, useValue: movieFacadeServiceMock },
-        { provide: MovieService, useValue: movieService },
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            queryParams: of({ search: 'some search query' }), // Mock queryParams
-          },
-        },
-        HttpClient
-      ]
+        { provide: MovieFacadeService, useValue: movieFacadeSpy },
+        { provide: MovieStateService, useValue: movieStateSpy },
+        { provide: MovieService, useValue: movieSpy },
+        { provide: LocalStorageService, useValue: localStorageSpy },
+        { provide: ActivatedRoute, useValue: {} },
+      ],
     }).compileComponents();
+
+    movieFacadeService = TestBed.inject(MovieFacadeService) as jasmine.SpyObj<MovieFacadeService>;
+    movieStateService = TestBed.inject(MovieStateService) as jasmine.SpyObj<MovieStateService>;
+    movieService = TestBed.inject(MovieService) as jasmine.SpyObj<MovieService>;
+    localStorageService = TestBed.inject(LocalStorageService) as jasmine.SpyObj<LocalStorageService>;
+
+    movieService.getMovies.and.returnValue(of({ results: mockMovies }));
+    localStorageService.getItem.and.returnValue([]);
 
     fixture = TestBed.createComponent(MovieListComponent);
     component = fixture.componentInstance;
-
-    fixture.detectChanges(); // Trigger initial change detection
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should complete componentDestroyed$ on ngOnDestroy', () => {
+  it('should set movies and filteredMovies on initialization', () => {
+    movieFacadeService.getMovie$.and.returnValue(of(mockMovies));
+
+    component.ngOnInit();
+
+    expect(component.movies).toEqual(mockMovies);
+    expect(component.filteredMovies).toEqual(mockMovies);
+  });
+
+  it('should set isLoading based on the loading state', () => {
+    movieFacadeService.getLoading$.and.returnValue(of(true));
+
+    component.ngOnInit();
+
+    expect(component.isLoading).toBeFalse();
+  });
+
+  it('should filter movies based on search query', () => {
+    component.movies = mockMovies;
+    component['filterMovies']('Movie 1');
+    expect(component.filteredMovies).toEqual([mockMovies[0]]);
+
+    component['filterMovies']('Movie 2');
+    expect(component.filteredMovies).toEqual([mockMovies[1]]);
+
+    component['filterMovies']('');
+    expect(component.filteredMovies).toEqual(mockMovies);
+  });
+
+  it('should update filteredMovies when searchControl value changes', () => {
+    component.movies = mockMovies;
+    component.searchControl.setValue('Movie 2');
+    expect(component.filteredMovies).toEqual([mockMovies[1]]);
+  });
+
+  it('should unsubscribe on component destruction', () => {
+    const nextSpy = spyOn(component.componentDestroyed$, 'next');
     const completeSpy = spyOn(component.componentDestroyed$, 'complete');
+
     component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalledWith(true);
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  fit('should call callMovies on ngOnInit', async () => {
-    component.ngOnInit();  // Trigger ngOnInit
-    fixture.detectChanges(); // Trigger change detection
-  
-    await fixture.whenStable(); // Wait for asynchronous operations to finish
-  
-    console.log(movieFacadeServiceMock);  // Log to inspect the mock
-    
-    expect(movieFacadeServiceMock.callMovies).toHaveBeenCalled(); // Check if callMovies was called
-  });
-  
- 
-
-  it('should subscribe to getLoading$ and update isLoading', () => {
-    // Update the return value of the already spied method
-    movieFacadeServiceMock.getLoading$.and.returnValue(of(false));
-  
-    component.ngOnInit();  // Trigger ngOnInit
-    fixture.detectChanges();  // Trigger change detection
-  
-    // Check if isLoading is updated correctly
-    expect(component.isLoading).toBeFalse();
-  });
-  
-
-
-
-
-  it('should handle empty search query', () => {
-    component.movies = mockMovies; // Manually set movies
-    component.searchControl.setValue('');
-    fixture.detectChanges(); // Trigger change detection
-
-    expect(component.filteredMovies).toEqual(mockMovies);
+  it('should display loading spinner when isLoading is true', () => {
+    component.isLoading = true;
+    fixture.detectChanges();
+    const loadingSpinner = fixture.nativeElement.querySelector('app-loading-spinner');
+    expect(loadingSpinner).toBeTruthy();
   });
 
-  it('should handle null search query', () => {
-    component.movies = mockMovies; // Manually set movies
-    component.searchControl.setValue(null as any); // Simulate null search query
-    fixture.detectChanges(); // Trigger change detection
-
-    expect(component.filteredMovies).toEqual(mockMovies);
+  it('should display movies when isLoading is false', () => {
+    component.isLoading = false;
+    component.filteredMovies = mockMovies;
+    fixture.detectChanges();
+    const movieCards = fixture.nativeElement.querySelectorAll('app-movie-card');
+    expect(movieCards.length).toBe(mockMovies.length);
   });
 });
