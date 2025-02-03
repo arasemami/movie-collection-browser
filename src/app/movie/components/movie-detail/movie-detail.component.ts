@@ -37,9 +37,9 @@ export class MovieDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.movieId = this._activatedRoute.snapshot.paramMap.get('id') as any;
-    
-    // Handle incorrect or missing movie ID
+    const movieIdParam = this._activatedRoute.snapshot.paramMap.get('id');
+    this.movieId = movieIdParam ? +movieIdParam : NaN;  
+  
     if (this.movieId) {
       this.movieFacadeService.callMovieDetail(this.movieId);
     } else {
@@ -48,7 +48,6 @@ export class MovieDetailComponent implements OnInit, OnDestroy {
   }
 
   private setSubtractions() {
-    // Handle successful movie fetch
     this.movieFacadeService.getSelectedMovie$()
       .pipe(takeUntil(this.componentDestroyed$))
       .subscribe((movie: Movie) => {
@@ -56,14 +55,12 @@ export class MovieDetailComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       });
 
-    // Handle loading state changes
     this.movieFacadeService.getLoading$()
       .pipe(takeUntil(this.componentDestroyed$))
       .subscribe((loading: boolean) => {
         this.isLoading = loading;
       });
 
-    // Handle movie fetch errors
     this.movieFacadeService.getError$()
       .pipe(takeUntil(this.componentDestroyed$))
       .subscribe((error) => {
@@ -72,9 +69,7 @@ export class MovieDetailComponent implements OnInit, OnDestroy {
         }
       });
   }
-
-  // Navigate to the "Not Found" page
-  private navigateToNotFound() {
+   navigateToNotFound() {
     this._router.navigate(['/not-found']);
   }
 

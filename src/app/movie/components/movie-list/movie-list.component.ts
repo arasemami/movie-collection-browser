@@ -38,8 +38,6 @@ export class MovieListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log('ngOnInit called');  // Debug log
-
     this.movieFacadeService.callMovies();
     
     this.searchControl.valueChanges.pipe(takeUntil(this.componentDestroyed$)).subscribe(query => {

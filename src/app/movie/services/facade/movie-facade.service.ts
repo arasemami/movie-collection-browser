@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Movie } from '../../../shared/interfaces/movie.interface';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { LocalStorageService } from '../../../shared/services/local-storage.service';
 import { WATCH_LIST_KEY } from '../../../shared/constant/local-storage-key.const';
@@ -65,13 +65,13 @@ export class MovieFacadeService {
     this._movieStateService.setSelectedMovie(movie);
   }
 
-  public callMovieDetail(id: number) {
+  public callMovieDetail(id: number): void {
     this.setLoading(true);
     this._movieService.getMovieDetails(id).pipe(
       catchError(error => {
         this.errorSubject.next(error);
         this.setLoading(false);
-        throw error;
+        return of(null); 
       })
     ).subscribe((res: any) => {
       if (res) {
@@ -83,6 +83,7 @@ export class MovieFacadeService {
       this.setLoading(false);
     });
   }
+  
 
   public getError$(): Observable<any> {
     return this.errorSubject.asObservable();

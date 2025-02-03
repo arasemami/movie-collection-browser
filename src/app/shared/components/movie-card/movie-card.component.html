@@ -1,10 +1,10 @@
 <div
-  class="relative w-full  bg-gray-900   group cursor-pointer overflow-hidden rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl text-white  ">
+  class="relative w-full bg-gray-900 group cursor-pointer overflow-hidden rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl text-white">
   <div>
-    <a [routerLink]="['/movie', movie.id]" class="block w-full h-full">
-      <img class="w-full aspect-[2/3] object-cover rounded-t-xl transition duration-300 group-hover:opacity-80"
+    <a *ngIf="movie" [routerLink]="['/movie', movie.id]" class="block w-full h-full">
+      <img class="w-full aspect-[2/3] object-cover rounded-t-xl transition duration-300  group-hover:opacity-80"
         [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" alt="{{ movie.title }}" />
-
+      
       <div class="p-4 flex flex-col items-center text-center">
         <h3 class="text-lg font-semibold truncate group-hover:text-yellow-400 transition duration-300 w-full">
           {{ movie.title }}
@@ -14,8 +14,7 @@
         </p>
       </div>
 
-      <div
-        class="absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4 text-center"
+      <div class="absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4 text-center"
         style="pointer-events: none">
         <h3 class="text-lg font-bold text-yellow-400">
           {{ movie.title }}
@@ -27,7 +26,7 @@
     </a>
 
   </div>
-  <div class="w-full  flex items-center justify-center p-4">
-    <app-watchlist-button [movie]="movie" class="z-10"></app-watchlist-button>
+  <div class="w-full flex items-center justify-center p-4">
+    <app-watchlist-button *ngIf="movie" [movie]="movie" class="z-10"></app-watchlist-button>
   </div>
 </div>

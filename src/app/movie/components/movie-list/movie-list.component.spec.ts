@@ -13,7 +13,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MovieService } from '../../services/movie.service';
 import { LocalStorageService } from '../../../shared/services/local-storage.service';
 
-fdescribe('MovieListComponent', () => {
+describe('MovieListComponent', () => {
   let component: MovieListComponent;
   let fixture: ComponentFixture<MovieListComponent>;
   let movieFacadeService: jasmine.SpyObj<MovieFacadeService>;
