@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { WatchlistService } from './watchlist.service';
 import { Movie } from '../../shared/interfaces/movie.interface';
-import { BehaviorSubject } from 'rxjs';
 import { WATCH_LIST_KEY } from '../constant/local-storage-key.const';
 
 describe('WatchlistService', () => {

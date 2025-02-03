@@ -9,7 +9,6 @@ import { WatchlistService } from '../../services/watchlist.service';
     CommonModule
   ],
   templateUrl: './watchlist-button.component.html',
-  styleUrl: './watchlist-button.component.scss'
 })
 export class WatchlistButtonComponent {
   @Input() movie!: Movie;

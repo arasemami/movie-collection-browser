@@ -20,13 +20,12 @@ import { Movie } from '../../../shared/interfaces/movie.interface';
     MovieStateService
   ],
   templateUrl: './movie-detail.component.html',
-  styleUrls: ['./movie-detail.component.scss']
 })
 export class MovieDetailComponent implements OnInit, OnDestroy {
   private movieFacadeService = inject(MovieFacadeService);
   private _activatedRoute = inject(ActivatedRoute);
   private _router = inject(Router);
-  
+
   componentDestroyed$: Subject<boolean> = new Subject();
   movieId!: number;
   isLoading: boolean = true;
@@ -38,8 +37,8 @@ export class MovieDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const movieIdParam = this._activatedRoute.snapshot.paramMap.get('id');
-    this.movieId = movieIdParam ? +movieIdParam : NaN;  
-  
+    this.movieId = movieIdParam ? +movieIdParam : NaN;
+
     if (this.movieId) {
       this.movieFacadeService.callMovieDetail(this.movieId);
     } else {
@@ -69,7 +68,8 @@ export class MovieDetailComponent implements OnInit, OnDestroy {
         }
       });
   }
-   navigateToNotFound() {
+
+  navigateToNotFound() {
     this._router.navigate(['/not-found']);
   }
 

@@ -22,7 +22,6 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
     MovieStateService
   ],
   templateUrl: './movie-list.component.html',
-  styleUrls: ['./movie-list.component.scss']
 })
 export class MovieListComponent implements OnInit, OnDestroy {
   private movieFacadeService = inject(MovieFacadeService);

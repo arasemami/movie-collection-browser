@@ -34,5 +34,4 @@ export class MovieStateService {
   public getSelectedMovie$(): Observable<Movie> {
     return this._selectedMovie$.asObservable();
   }
-
 }

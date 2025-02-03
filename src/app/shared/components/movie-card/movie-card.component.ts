@@ -12,7 +12,6 @@ import { WatchlistButtonComponent } from '../watchlist-button/watchlist-button.c
   ],
   standalone: true,
   templateUrl: './movie-card.component.html',
-  styleUrl: './movie-card.component.scss'
 })
 export class MovieCardComponent {
   @Input() movie: any;
