@@ -57,31 +57,53 @@ npm run build
 The output will be in the `dist/` directory.
 
 
-## Folder Structure
+## Code Structure
+The project follows a modular and feature-based architecture, making it scalable and maintainable. Below is an overview of the directory structure:  
+
 ```
-movie-collection-browser/
-├── src/                                    # Application source code
-│   ├── app/                            # Main application module and components
-│   │   ├── components/         # Reusable UI components
-│   │   ├── services/                # Angular services for API calls and state management
-│   │   ├── models/                 # Data models
-│   │   ├── app.module.ts       # Main Angular module
-│   │   ├── app.component.ts # Root component
-│   ├── assets/                        # Static assets (images, icons, etc.)
-│   ├── environments/            # Environment-specific configurations
-│   ├── main.ts                        # Application entry point
-│   ├── index.html                   # Main HTML file
-│   ├── styles.css                     # Global styles
-├── public/                              # Static assets
-├── cypress/                            # Cypress test files
-│   ├── integration/                 # Test scripts
-│   ├── support/                      # Cypress support files
-├── angular.json                     # Angular configuration
-├── tailwind.config.js              # Tailwind CSS configuration
-├── package.json                    # Project dependencies
-├── tsconfig.json                    # TypeScript configuration
-├── .gitignore                         # Git ignore file
-├── README.md                    # Project documentation
+src  
+│-- app  
+│   │-- movie  
+│   │   │-- components  
+│   │   │   │-- movie-detail/       # Displays detailed movie information  
+│   │   │   │-- movie-list/         # Lists all available movies  
+│   │   │-- services/               # Handles API calls and business logic  
+│   │   │   │-- facade/             # Centralized movie data management  
+│   │   │   │-- state/              # State management (e.g., NgRx, signals, or BehaviorSubject)  
+│   │-- not-found/                  # Handles 404 pages  
+│   │-- shared/  
+│   │   │-- components/             # Reusable UI components  
+│   │   │   │-- header/             # Navigation header  
+│   │   │   │-- loading-spinner/    # Loader for async operations  
+│   │   │   │-- movie-card/         # Reusable movie card component  
+│   │   │   │-- watchlist-button/   # Button for adding/removing movies from watchlist  
+│   │   │-- constant/               # Constants used across the application  
+│   │   │-- interfaces/             # TypeScript interfaces for data models  
+│   │   │-- services/               # Shared services used across modules  
+│   │-- watchlist/  
+│   │   │-- components/             # Components related to the user's watchlist  
+
+cypress
+│-- downloads/ # Stores downloaded files during tests
+│-- fixtures/ # Mock data for testing
+│ │-- movie/ # Fixtures related to movie tests
+│ │-- watchlist/ # Fixtures related to watchlist tests
+│-- support/ # Custom commands and utility functions
+│ │-- step_definitions/ # Step definitions for BDD-style tests
+│-- videos/ # Recorded test execution videos
+│ │-- movie/ # Test recordings for movie-related tests
+│ │-- watchlist/ # Test recordings for watchlist-related tests
+
 ```
+
+
+### 🔹 **Key Highlights**  
+✅ **Feature-Based Organization:** Each feature (Movie, Watchlist, Not Found) is self-contained.  
+✅ **Shared Module:** Common components, constants, and services are placed in a `shared` directory to avoid redundancy.  
+✅ **State Management:** Uses a dedicated `state` folder for handling application state (e.g., NgRx, signals, or RxJS).  
+✅ **Facade Pattern:** A `facade` layer abstracts service complexities, improving maintainability.  
+✅ **End-to-End Testing:** Cypress is used for automated testing with structured fixtures, step definitions, and video recordings.  
+
+This structure ensures **scalability, reusability, and easy maintenance** as the project grows. 🚀  
 
 
