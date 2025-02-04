@@ -22,7 +22,7 @@
                 <p class="mt-6 text-gray-100 text-lg leading-relaxed">{{ movie.overview }}</p>
 
                 <div class="mt-6 flex items-center justify-center lg:justify-start">
-                    <app-watchlist-button [movie]="movie"></app-watchlist-button>
+                    <app-watchlist-button [id]="movie.title" [movie]="movie"></app-watchlist-button>
                 </div>
 
                 <div class="mt-6 flex items-center justify-center lg:justify-start gap-2">

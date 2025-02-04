@@ -27,6 +27,6 @@
 
   </div>
   <div class="w-full flex items-center justify-center p-4">
-    <app-watchlist-button *ngIf="movie" [movie]="movie" class="z-10"></app-watchlist-button>
+    <app-watchlist-button [id]="movie.title" *ngIf="movie" [movie]="movie" class="z-10"></app-watchlist-button>
   </div>
 </div>

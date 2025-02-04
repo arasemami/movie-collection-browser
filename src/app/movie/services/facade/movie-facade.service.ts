@@ -42,7 +42,7 @@ export class MovieFacadeService {
   }
 
   private setWatchListMovie(movies: Movie[]): Movie[] {
-    const watchlist = this._localStorageService.getItem(WATCH_LIST_KEY);
+    const watchlist = this._localStorageService.getItem(WATCH_LIST_KEY) || [];
     movies.forEach(movie => {
       movie.isWatchList = !!watchlist.find((w: { id: number }) => w.id === movie.id);
     });
@@ -71,19 +71,19 @@ export class MovieFacadeService {
       catchError(error => {
         this.errorSubject.next(error);
         this.setLoading(false);
-        return of(null); 
+        return of(null);
       })
     ).subscribe((res: any) => {
       if (res) {
         const movie = res;
-        const watchlist = this._localStorageService.getItem(WATCH_LIST_KEY);
+        const watchlist = this._localStorageService.getItem(WATCH_LIST_KEY) || [];
         movie.isWatchList = !!watchlist.find((w: { id: number }) => w.id === movie.id);
         this.setSelectedMovie(movie);
       }
       this.setLoading(false);
     });
   }
-  
+
 
   public getError$(): Observable<any> {
     return this.errorSubject.asObservable();
